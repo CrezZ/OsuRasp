@@ -18,7 +18,7 @@ function sendMenu4($chat,$text){
 
 #minimal time before reminder in minutes
 
-$mintime=555;
+$mintime=5;
 
 // one per day start
 if ((date('H') == 6) && (date('i') < 5)) {	 //work only at 06:00

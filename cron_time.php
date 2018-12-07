@@ -16,7 +16,7 @@ function sendMenu4($chat,$text){
 
 mysqli_query('set codepage "utf-8"');
 #minimal time before reminder in minutes
-$mintime=5555;
+$mintime=5;
 
 //select time reminder
 $r=mysqli_query($mysql,"select type,timer,save.user_id,who_id,prep_id,facult_id,potok_id,group_id from reminder left join save on reminder.user_id=save.user_id ".
