@@ -297,6 +297,55 @@ if($_USER['id'] == $_CHAT['id'])
 		$state=4;
     		$_TEXT='/rs';
 		mysqli_query($mysql,"update save set last_state=4 where user_id='".$_USER['id']."'");
+
+////////////////////////////////////
+//// ADD TO CACHE current schedule
+///////////////////////////////////
+$rr=mysqli_query($mysql,"select type,timer,save.user_id,who_id,prep_id,facult_id,potok_id,group_id from reminder".
+                " left join save on reminder.user_id=save.user_id ".
+                " where enabled=1 and type=2 and save.user_id='".$_USER['id']."'");
+if (mysqli_num_rows($r)>0){
+    while($ar2=mysqli_fetch_assoc($rr)){
+        if ($ar2['who_id']==2){ //  prepod
+            //print 'go';
+
+        //    $rasp=getOSUData('rasp',$ar2['prep_id'],2);
+            $data="Пары:\n";
+            $ras=getOSUData('rasp',$ar2['prep_id'],2);
+            $dat= time();
+            $dd=strtoupper(date("d-M-y",$dat));
+            $rasp=array();
+//          if ($ar2)
+            foreach ($ras as $f){
+                if ($f['DAY']==$dd)
+                {
+                    $rasp[]=$f['DESCRIPTION'].' - '.$f['AUD_ALL_LPAD'].'-'.$f['NAMEGROUP'].' '.$f['SHORT_NAME_SUB'].'('.$f['TYPEZAN_SHORT_NAME'].")";
+                }
+            }//foreach
+            if (count($rasp)!=0){ //no lessons
+                sort($rasp);
+                $time=substr($rasp[0],0,5);
+                $data.=mysqli_real_escape_string($mysql,implode("\n",$rasp));
+                mysqli_query($mysql,"insert into cache (user_id,timer,dat,message) values ".
+			    "('".$ar['user_id']."',TIMEDIFF('$time','".$ar2['timer']."'),now(),'$data')".
+			    "ON DUPLICATE KEY UPDATE timer=TIMEDIFF('$time','".$ar2['timer']."'), dat=now(), message='$data'");
+            }
+//      sendMenu4($ar['user_id'],$data);
+//          mysqli_query($mysql,"");
+//print $data;
+        }
+        if ($ar['who_id']==1){ //  student
+//            $rasp=getOSUData('rasp',$ar['group_id'],1);
+        }
+
+    } // while
+    } // not 0
+
+
+
+
+
+
 	    } else
 	    {
     	        sendMessage($_CHAT['id'],"Неправильный формат, введите заново или отмените /undo", '');
@@ -396,7 +445,7 @@ if($_USER['id'] == $_CHAT['id'])
 		mysqli_query($mysql,"update save set last_state='5' where user_id='".$_USER['id']."'");
 		}
 		if (strpos($_TEXT,'/rs2')===0){
-    	        $data.="Введите за сколько минут оповестить:";
+    	        $data.="Введите за сколько минут оповестить перед ПЕРВОЙ парой:";
 		mysqli_query($mysql,"update save set last_state='6' where user_id='".$_USER['id']."'");
 		}
 	}

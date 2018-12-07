@@ -20,11 +20,12 @@ $mintime=5;
 
 //select time reminder
 $r=mysqli_query($mysql,"select type,timer,save.user_id,who_id,prep_id,facult_id,potok_id,group_id from reminder left join save on reminder.user_id=save.user_id ".
-	    "where enabled=1 and type=1 and ABS(TIME_TO_SEC(TIMEDIFF(curtime(),timer))/60) < $mintime ");
+	    "where enabled=1 and type=1 and ABS(TIME_TO_SEC(TIMEDIFF(curtime(),timer))/60) <= $mintime ");
+print 'go - '.mysqli_num_rows($r);
 
 if (mysqli_num_rows($r)>0){
     while($ar=mysqli_fetch_assoc($r)){
-#var_dump($ar);
+var_dump($ar);
 	if ($ar['who_id']==2){ //  prepod
 #print 'go';
 

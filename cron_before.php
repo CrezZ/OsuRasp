@@ -21,7 +21,8 @@ function sendMenu4($chat,$text){
 $mintime=5;
 
 // one per day start
-if ((date('H') == 6) && (date('i') < 5)) {	 //work only at 06:00
+//if ((date('H') == 6) && (date('i') < 5)) 
+{	 //work only at 06:00
 $r=mysqli_query($mysql,"select type,timer,save.user_id,who_id,prep_id,facult_id,potok_id,group_id from reminder".
 		" left join save on reminder.user_id=save.user_id ".
 		" where enabled=1 and type=2 ");
