@@ -1,0 +1,41 @@
+Array
+(
+    [update_id] => 331589133
+    [message] => Array
+        (
+            [message_id] => 1233
+            [from] => Array
+                (
+                    [id] => 182330792
+                    [is_bot] => 
+                    [first_name] => Yuriy
+                    [last_name] => Ushakov
+                    [username] => yuriyushakov
+                    [language_code] => en
+                )
+
+            [chat] => Array
+                (
+                    [id] => 182330792
+                    [first_name] => Yuriy
+                    [last_name] => Ushakov
+                    [username] => yuriyushakov
+                    [type] => private
+                )
+
+            [date] => 1544162498
+            [text] => /w2 Я преподаватель
+            [entities] => Array
+                (
+                    [0] => Array
+                        (
+                            [offset] => 0
+                            [length] => 3
+                            [type] => bot_command
+                        )
+
+                )
+
+        )
+
+)
