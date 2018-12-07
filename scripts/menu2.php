@@ -88,6 +88,8 @@ if($_USER['id'] == $_CHAT['id'])
 	sendHelp($_CHAT['id']);
 	// clear state for user
 	mysqli_query($mysql,"update save set last_state=0  where user_id='".$_USER['id']."'");
+	mysqli_query($mysql,"delete from reminder  where user_id='".$_USER['id']."'");
+	mysqli_query($mysql,"delete from cache where user_id='".$_USER['id']."'");
 	$ar['last_state']=0;
 	//exit();
     }// /start
@@ -300,9 +302,31 @@ if($_USER['id'] == $_CHAT['id'])
 
 	}
     }
-
-    if ($state>=4) // select reminder
+    if (($state>=4)) // select reminder
     {
+	if (((strpos($_TEXT,'/day')===0)||(strpos($_TEXT,'/z')===0)) && ($ar['who_id']==1)){
+	// if today or tomorrow
+	    $data="Пары:\n";
+	    $ras=getOSUData('rasp',$ar['group_id'].'&potok='.$ar['potok_id'].'&facult='.$ar['facult_id'],1);
+	    $dat= (strpos($_TEXT,'/z')===0)? strtotime("+1 day") : time();
+	    $dd=strtoupper(date("d-M-y",$dat));
+	    $rasp=array();
+//	    if ($ar2)
+	    foreach ($ras as $f){
+		if ($f['DAY']==$dd)
+		{
+		    $rasp[]=$f['DESCRIPTION'].' - '.$f['AUD_ALL_LPAD'].'-'.$f['FIO_SOKR'].' '.$f['SHORT_NAME_SUB'].'('.$f['TYPEZAN_SHORT_NAME'].")";
+		}
+	    }//foreach
+	    if (count($rasp)==0){ //no lessons
+		$data='Нет пар';
+	    } else {
+		sort($rasp);
+		$data.=implode("\n",$rasp);
+	    }
+		mysqli_query($mysql,"update save set last_state='4' where user_id='".$_USER['id']."'");
+
+	}
 	if (((strpos($_TEXT,'/day')===0)||(strpos($_TEXT,'/z')===0)) && ($ar['who_id']==2)){
 	// if today or tomorrow
 	    $data="Пары:\n";
