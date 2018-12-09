@@ -5,8 +5,6 @@
 
 require_once 'settings.php';
 
-// include_once 'mikrotikApi.php';
-# Функции и вот это всё
 
 # простая отправка сообщения
 function sendMessage($id_chat, $text, $mark = '', $id_message = '')
@@ -46,16 +44,39 @@ function editMessage($id_message, $id_chat, $text, $mark = '')
 	}
 
 # отправка клавы с выборкой
-function sendKeyboard($id_chat, $text, $mark = '', $id_message = '', $keyboard = array(),$commands = array())
+function sendKeyboard($id_chat, $text, $mark = '', $id_message = '', $keyboard = array(),$max_in_row=0)
 	{
 		sendChatAction($id_chat, 'typing');
 		sleep(1);
-		
+		$inline=array();
+		$add="";	
+		$i=0;$j=0;
+		//$max_in_row=3;
+		if ($max_in_row>0){
+		  foreach ($keyboard as $k1){
+			
+		  if (count($k1)>1){
+		    foreach ($k1 as $k2){
+			 //$k2n=substr($k2,strpos($k2,'-')+1,strlen($k2));
+			 $inline[$j][]=['text'=> "$k2", 'callback_data' => "$k2" ];
+			 $i++;
+		  if ($i%$max_in_row==0) $j++;
+		   }} else
+		   {   
+	         // $k1n=substr($k1,strpos($k1,'-')+1,strlen($k1));
+		     $inline[$j][]=((array('text'=> "$k1", 'callback_data' => "$k1" )));
+	     	}
+//			if ($i%$max_in_row==0) $j++;		
+		     $i++;
+		 //		 error_log($i.$j);
+		  }
+		} else
+		{$inline=$keyboard;}
 		$toSend = array('method' => 'sendMessage', 'chat_id' => $id_chat, 'text' => $text);
 		isset($id_message) ? $toSend['reply_to_message_id'] = $id_message : '';
 		isset($mark) ? $toSend['parse_mode'] = $mark : '';
 		
-		!empty($keyboard) ? $toSend['reply_markup'] = array('keyboard' => $keyboard, 'resize_keyboard' => true, 'selective' => true) : '';
+		!empty($keyboard) ? $toSend['reply_markup'] = array('keyboard' => $inline, 'resize_keyboard' => true, 'selective' => true) : '';
 		
 		$ch = curl_init(API_URL);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -70,14 +91,38 @@ function sendKeyboard($id_chat, $text, $mark = '', $id_message = '', $keyboard =
 function sendInlineKeyboard($id_chat, $text, $mark = '', $id_message = '', $keyboard = array())
 	{
 		sendChatAction($id_chat, 'typing');
-		sleep(1);
+		//sleep(1);
+		$inline=array();
+		$add="";	
+		$i=0;$j=0;
+		$max_in_row=3;
+		foreach ($keyboard as $k1){
+			
+		  if (count($k1)>1){
+		 foreach ($k1 as $k2){
+			 $k2n=substr($k2,strpos($k2,'-')+1,strlen($k2));
+			 $inline[$j][]=['text'=> "$k2n", 'callback_data' => "$k2" ];
+			 $i++;
+		 if ($i%$max_in_row==0) $j++;
+		 }} else
+		 {   
+	          $k1n=substr($k1,strpos($k1,'-')+1,strlen($k1));
+		 $inline[$j][]=((array('text'=> "$k1n", 'callback_data' => "$k1" )));
+			  }
+		 $i++;
+		 if ($i%$max_in_row==0) $j++;
+//		 error_log($i.$j);
+		}
 		
-		$toSend = array('method' => 'sendMessage', 'chat_id' => $id_chat, 'text' => $text);
+		//error_log(var_export($inline, true));
+		//$text.=var_export($inline, true);
+		
+		
+		$toSend = array('method' => 'sendMessage', 'chat_id' => $id_chat, 'text' => "$text");
 		isset($id_message) ? $toSend['reply_to_message_id'] = $id_message : '';
 		isset($mark) ? $toSend['parse_mode'] = $mark : '';
-		
-		!empty($keyboard) ? $toSend['reply_markup'] = array('inline_keyboard' => $keyboard, 'resize_keyboard' => true, 'selective' => true) : '';
-		
+		!empty($keyboard) ? $toSend['reply_markup'] = array('inline_keyboard' => $inline) : '';
+		//error_log(json_encode($toSend));
 		$ch = curl_init(API_URL);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
@@ -85,6 +130,7 @@ function sendInlineKeyboard($id_chat, $text, $mark = '', $id_message = '', $keyb
 		curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($toSend));
 		curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-Type: application/json"));
 		$a = curl_exec($ch);
+		//error_log($a);
 		return json_decode($a, true);
 	}
 

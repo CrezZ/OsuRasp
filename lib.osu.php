@@ -67,8 +67,8 @@ if ($request !='rasp')		$a=str_replace('"','^',$a);
 }
 
 //test
-#$r= getOSUData('rasp',"11746&facult=5220&potok=2018",1);
+//$r= getOSUData('rasp',"11746&facult=5220&potok=2018",1);
 //$r= getOSUData('rasp',"32375",2);
-#var_dump( $r);
+//var_dump( $r);
 
 ?>

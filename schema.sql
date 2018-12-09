@@ -29,7 +29,7 @@ CREATE TABLE `cache` (
   `dat` date DEFAULT NULL,
   `message` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT 
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -67,7 +67,7 @@ CREATE TABLE `reminder` (
   `timer` time DEFAULT NULL,
   `enabled` int(11) DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT 
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -91,9 +91,9 @@ CREATE TABLE `save` (
   `group_id` int(11) DEFAULT NULL,
   `group_name` varchar(10) DEFAULT NULL,
   `potok_id` int(11) DEFAULT NULL,
-  `porok_name` varchar(10) DEFAULT NULL,
+  `potok_name` varchar(10) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 
@@ -106,7 +106,7 @@ CREATE TABLE `tg_users` (
   `id_user` int(11) DEFAULT NULL,
   `nick` tinytext,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT 
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 

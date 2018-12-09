@@ -1,25 +1,27 @@
 <?php
 // exit;
 #error_log("Begin");
-require_once 'api.php'; // всякие функции отправки сообщений, обработки и так далее + задание констант типа API_TOKEN и коннект к бд
+require_once 'settings.php';
+require_once 'api.php'; 
 require_once 'lib.osu.php';
+require_once 'lib.tg.php';
 
-# сеттим вебхук, если скрипт выполняется из оболочки системы
+		define('MESSENGER', 'telegram');
+
 if(php_sapi_name() == 'cli' OR isset($_GET['webhook']))
 	{
 		setWebhook(WEBHOOK);	
-#error_log("Set Web Hook");
 	}
-# процессим входящую ебалу
 
 $content = file_get_contents("php://input"); // всё, что пришло на вебхук ПОСТом - идет в $content
 $update = @json_decode($content, true); // декодим из джсона в ассоциативный массив
-//ob_start();
+/*
+ob_start();
 //print_r($update);
-//$dat = ob_get_contents();
-//file_put_contents(R.'/data/debug.log', $dat);
-//ob_end_clean();
-
+$dat = ob_get_contents();
+file_put_contents(R.'/data/debug.log', $dat.var_export($update,true));
+ob_end_clean();
+*/
 // die;
 
 if(!$update)
@@ -29,10 +31,12 @@ if(!$update)
 	}
 else
 	{
-		# делаем псевдоглобальные переменные
-		$_MESS = $update['message']; // массив с содержанием самого сообщения (полезная информация то есть)
-		$_TEXT = mb_strtolower($_MESS['text'], 'utf-8'); // для нерегистрозависимости сразу текст в нижнее подчеркивание
-		$_CHAT = $_MESS['chat']; // информация о том, какой это чат (если это личка, части переменных не будет)
+		define ('INLINE',!empty($update['callback_query']));
+//		# делаем псевдоглобальные переменные
+		$_MESS = (!empty($update['message']))? $update['message']:$update['callback_query']['message']; // массив с содержанием самого сообщения (полезная информация то есть)
+		$_TEXT = (!INLINE)?mb_strtolower($_MESS['text'], 'utf-8'):
+					mb_strtolower($update['callback_query']['data'], 'utf-8'); // для нерегистрозависимости сразу текст в нижнее подчеркивание
+		$_CHAT = (!empty($_MESS['chat']))?$_MESS['chat']:''; // информация о том, какой это чат (если это личка, части переменных не будет)
 		$_USER = $_MESS['from']; // информация о юзере-отправителе
 		$_USER['username'] = empty($_USER['username']) ? $_USER['first_name'].' '.$_USER['last_name'] : $_USER['username'];
 		
@@ -49,7 +53,7 @@ else
 				mysqli_query($mysql,"INSERT INTO `tg_users`(`id_user`, `nick`) VALUES ('".$_USER['id']."', '".$_USER['username']."')");
 			}
 		
-		// проверяем, чят или личка, если чят - пишем чят
+/*		// if not private
 		if($_USER['id'] != $_CHAT['id'])
 			{
 				$q_c = mysqli_query($mysql,"SELECT * FROM `tg_chats` WHERE `id_chat` = '".$_CHAT['id']."'");
@@ -70,10 +74,12 @@ else
 							}
 					}
 			}
+*/
+
 			
-		$qt = mysqli_query($mysql,"SELECT * FROM `blacklist_chats` WHERE `id_chat` = ".$_CHAT['id']);
-		if(mysqli_num_rows($qt) == 0 OR $_USER['username'] == ADMIN)
-			{
+//		$qt = mysqli_query($mysql,"SELECT * FROM `blacklist_chats` WHERE `id_chat` = ".$_CHAT['id']);
+//		if(mysqli_num_rows($qt) == 0 OR $_USER['username'] == ADMIN)
+//			{
 				$h = opendir('scripts');
 				while(false !== ($file = readdir($h)))
 					{
@@ -85,5 +91,5 @@ else
 							}
 					}
 				closedir($h);
-			}
+//			}
 	}
