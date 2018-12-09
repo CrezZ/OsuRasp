@@ -1,13 +1,6 @@
 <?php
 
-error_log(MESSENGER."$_TEXT");
-/*
-create table save(id int primary key, user_id int, last_state int, 
-who_id int,facult_id int, facult_name varchar(10), kafedra_id int, 
-kafedra_name varchar(10), prep_id int, prep_name varchar(20), group_id int, 
-group_name varchar(10), potok_id int, potok_name varchar(10));
-
-*/
+error_log(MESSENGER."-$_TEXT\n");
 
 
 //////////////////////////////////////////////////////////////////////////////
@@ -19,8 +12,7 @@ group_name varchar(10), potok_id int, potok_name varchar(10));
 {
 
     // main query for user chat 
-    $r=mysqli_query($mysql,"select * from save where viber_id='".$_USER['id']."' OR user_id='".
-	$_USER['id']."'");
+    $r=mysqli_query($mysql,"select * from save where viber_id='".$_USER['id']."' ");
     $ar=null;
     if (mysqli_num_rows($r)>0){
 	$ar=mysqli_fetch_assoc($r);
@@ -35,7 +27,7 @@ group_name varchar(10), potok_id int, potok_name varchar(10));
 	$end2=($end2===false)?strlen($_TEXT):$end2;
 	$end0=($end2>$end)?$end:$end2;
 	$num=mysqli_real_escape_string($mysql,trim(substr($_TEXT,2,$end0-1)));
-	error_log($end.$end2.$end0.$num);
+	//error_log($end.$end2.$end0.$num);
     }
 
 
@@ -49,17 +41,22 @@ group_name varchar(10), potok_id int, potok_name varchar(10));
 	//clear all and create new record
 	sendHelp($_CHAT['id']);
 	// clear state for user
-	mysqli_query($mysql,"update save set last_state=0  where viber_id='".$_USER['id']."' OR user_id='".$_USER['id']."'");
-	mysqli_query($mysql,"delete from reminder  where  viber_id='".$_USER['id']."' OR user_id='".$_USER['id']."'");
-	mysqli_query($mysql,"delete from cache where  viber_id='".$_USER['id']."' OR user_id='".$_USER['id']."'");
+	mysqli_query($mysql,"update save set last_state=0  where viber_id='".$_USER['id']."' ");
+	mysqli_query($mysql,"delete from reminder  where  viber_id='".$_USER['id']."' ");
+	mysqli_query($mysql,"delete from cache where  viber_id='".$_USER['id']."' ");
 	$ar['last_state']=0;
 	exit();
     }// /start
 	
+	if (($ar['last_state']==0)&&(strpos($_TEXT,'/')===false)) {  //all inputs
+	sendHelp($_CHAT['id']);
+	exit;
+	}
+	
     if (strpos($_TEXT,'/noreminder')===0){
 	// clear state for user
-	mysqli_query($mysql,"delete from reminder  where  viber_id='".$_USER['id']."' OR user_id='".$_USER['id']."'");
-	mysqli_query($mysql,"delete from cache where  viber_id='".$_USER['id']."' OR user_id='".$_USER['id']."'");
+	mysqli_query($mysql,"delete from reminder  where  viber_id='".$_USER['id']."' ");
+	mysqli_query($mysql,"delete from cache where  viber_id='".$_USER['id']."' ");
 	sendMenu4($_CHAT['id'],"Очищено");
 	$_TEXT="/rs"; //redirect to reminder list
     }// /noreminder
@@ -83,11 +80,11 @@ group_name varchar(10), potok_id int, potok_name varchar(10));
 	if (mysqli_num_rows($r)==0){ //new
 	    mysqli_query($mysql,"insert into save (last_state,who_id,user_id,viber_id) values ('1','$num','".$_USER['id']."','".$_USER['id']."')");
 	    //re-query new data array
-	    $r=mysqli_query($mysql,"select * from save where  viber_id='".$_USER['id']."' OR user_id='".$_USER['id']."'");
+	    $r=mysqli_query($mysql,"select * from save where  viber_id='".$_USER['id']."' ");
 	    $ar=mysqli_fetch_assoc($r);
 	    sendMenu1($_CHAT['id'], 'Вы добавлены как новый пользователь '.$title,''); 
 	}else { 
-	    mysqli_query($mysql,"update save set last_state=1,who_id='$num' where  viber_id='".$_USER['id']."' OR  user_id='".$_USER['id']."'");
+	    mysqli_query($mysql,"update save set last_state=1,who_id='$num' where  viber_id='".$_USER['id']."' ");
 
 	    $ar['who_id']=$num;
         sendMenu1($_CHAT['id'], 'Вы обновлены как '.$title);
@@ -107,10 +104,10 @@ group_name varchar(10), potok_id int, potok_name varchar(10));
 //		exit();
 	    } // error state
 	    $fn=substr($_TEXT,strpos($_TEXT,'-')+1,strlen($_TEXT));
-	    mysqli_query($mysql,"update save set last_state=2,facult_id='$num',facult_name='$fn'  where  viber_id='".$_USER['id']."' OR user_id='".$_USER['id']."'");
+	    mysqli_query($mysql,"update save set last_state=2,facult_id='$num',facult_name='$fn'  where  viber_id='".$_USER['id']."' ");
 	    $ar['last_state']=2; // next state
 	    $ar['facult_id']=$num;
-		error_log(var_export($ar, true));
+		//error_log(var_export($ar, true));
 	} // /f
     
     	if (strpos($_TEXT,'/p')===0){	//select potok
@@ -120,7 +117,7 @@ group_name varchar(10), potok_id int, potok_name varchar(10));
 //		exit();
 	    } //error state
 	    $fn=substr($_TEXT,strpos($_TEXT,'-'),strlen($_TEXT));
-	    mysqli_query($mysql,"update save set last_state=3,potok_id='$num',potok_name='$fn'  where  viber_id='".$_USER['id']."' OR  user_id='".$_USER['id']."'");
+	    mysqli_query($mysql,"update save set last_state=3,potok_id='$num',potok_name='$fn'  where  viber_id='".$_USER['id']."' ");
 	    //correcting local copy of user data
 	    $ar['last_state']=3;
 	    $ar['potok_id']=$num;
@@ -133,7 +130,7 @@ group_name varchar(10), potok_id int, potok_name varchar(10));
 //		exit();
 	    } //error state
 	    $fn=substr($_TEXT,strpos($_TEXT,'-'),strlen($_TEXT));
-	    mysqli_query($mysql,"update save set last_state=4,group_id='$num',group_name='$fn'  where  viber_id='".$_USER['id']."' OR  user_id='".$_USER['id']."'");
+	    mysqli_query($mysql,"update save set last_state=4,group_id='$num',group_name='$fn'  where  viber_id='".$_USER['id']."' ");
 
 	    //correcting local copy of user data
 	    $ar['last_state']=4;
@@ -147,7 +144,7 @@ group_name varchar(10), potok_id int, potok_name varchar(10));
 //		exit();
 	    }
 	    $fn=substr($_TEXT,strpos($_TEXT,'-'),strlen($_TEXT));
-	    mysqli_query($mysql,"update save set last_state=3,kafedra_id='$num',kafedra_name='$fn'  where  viber_id='".$_USER['id']."' OR  user_id='".$_USER['id']."'");
+	    mysqli_query($mysql,"update save set last_state=3,kafedra_id='$num',kafedra_name='$fn'  where  viber_id='".$_USER['id']."' ");
 
 	    //correcting local copy of user data
 	    $ar['last_state']=3;
@@ -161,7 +158,7 @@ group_name varchar(10), potok_id int, potok_name varchar(10));
 //		exit();
 	    } // error state
 	    $fn=substr($_TEXT,strpos($_TEXT,'-'),strlen($_TEXT));
-	    mysqli_query($mysql,"update save set last_state=4,prep_id='$num',prep_name='$fn'  where  viber_id='".$_USER['id']."' OR  user_id='".$_USER['id']."'");
+	    mysqli_query($mysql,"update save set last_state=4,prep_id='$num',prep_name='$fn'  where  viber_id='".$_USER['id']."' ");
 
 	    //correcting local copy of user data
 	    $ar['last_state']=4;
@@ -181,7 +178,7 @@ group_name varchar(10), potok_id int, potok_name varchar(10));
 	$state=$ar['last_state']; // cache
 	$data=''; // Text for user will be here
     $lines=[];
-	if ($ar['who_id']==1) //student
+	if (($ar['who_id']==1)&&(strpos($_TEXT,'/')===0)) //student
 
 	{
 	if ($state==1){ // select fac
@@ -213,7 +210,7 @@ group_name varchar(10), potok_id int, potok_name varchar(10));
 
     } // if who=1
 
-    if ($ar['who_id']==2) //prepod
+    if (($ar['who_id']==2)&&(strpos($_TEXT,'/')===0)) //prepod
     {
 	if ($state==1) // select fac
 	{
@@ -259,7 +256,7 @@ group_name varchar(10), potok_id int, potok_name varchar(10));
 			"('".$_USER['id']."','$time',1,1,'".MESSENGER."','".$_USER['id']."')");
 		$state=4;  			// resore state
     		$_TEXT='/rs'; // redirect to list of remiders
-		mysqli_query($mysql,"update save set last_state=4 where  viber_id='".$_USER['id']."' OR user_id='".$_USER['id']."'");
+		mysqli_query($mysql,"update save set last_state=4 where  viber_id='".$_USER['id']."' ");
 	    } else //if $time
 	    {
     	        sendMenu2($_CHAT['id'],"Неправильный формат, введите заново или отмените /undo");
@@ -275,14 +272,14 @@ group_name varchar(10), potok_id int, potok_name varchar(10));
 			"('".$_USER['id']."','$time',2,1,'".MESSENGER."','".$_USER['id']."' )");
 		$state=4;
     		$_TEXT='/rs';
-		mysqli_query($mysql,"update save set last_state=4 where  viber_id='".$_USER['id']."' OR  user_id='".$_USER['id']."'");
+		mysqli_query($mysql,"update save set last_state=4 where  viber_id='".$_USER['id']."' ");
 
 		////////////////////////////////////
 		//// ADD TO CACHE current schedule
 		///////////////////////////////////
 		$rr=mysqli_query($mysql,"select type,timer,reminder.viber_id,reminder.messenger,save.user_id,who_id,prep_id,facult_id,potok_id,group_id from reminder".
                 " left join save on (reminder.user_id=save.user_id ot reminder.viber_id=save.viber_id)".
-                " where enabled=1 and type=2 and  (viber_id='".$_USER['id']."' OR save.user_id='".$_USER['id']."')");
+                " where enabled=1 and type=2 and  (viber_id='".$_USER['id']."' )");
 		  if (mysqli_num_rows($r)>0){
 			while($ar2=mysqli_fetch_assoc($rr)){
 				$date=strtoupper(date("d-M-y",time()));
@@ -324,23 +321,31 @@ group_name varchar(10), potok_id int, potok_name varchar(10));
 		sort($rasp);
 		$data.=implode("\n",$rasp);
 	    }
-		mysqli_query($mysql,"update save set last_state='4' where  viber_id='".$_USER['id']."' OR  user_id='".$_USER['id']."'");
-	}
+		mysqli_query($mysql,"update save set last_state='4' where  viber_id='".$_USER['id']."' ");
+	} // /day /z
 ///create table reminder (id int primary key auto_increment, 
 //user_id int, type int, timer TIME, enabled int default '0' );	
 	if (strpos($_TEXT,'/rd')===0){ //delete
 	    $id=substr($_TEXT,3,strlen($_TEXT));
-	    mysqli_query($mysql,"delete from reminder where id='$id' and ( viber_id='".$_USER['id']."' OR user_id='".$_USER['id']."')");
+	    mysqli_query($mysql,"delete from reminder where id='$id' and ( viber_id='".$_USER['id']."' )");
 	    $_TEXT='/rs';
+		$data='Готово';
 	    }
 	if (strpos($_TEXT,'/rp')===0){ //pause
 	    $id=substr($_TEXT,3,strlen($_TEXT));
-	    mysqli_query($mysql,"update reminder set enabled='0' where id='$id' and ( viber_id='".$_USER['id']."' OR user_id='".$_USER['id']."')");
+	    mysqli_query($mysql,"update reminder set enabled='0' where id='$id' and ( viber_id='".$_USER['id']."' )");
 	    $_TEXT='/rs';
+		$data='Готово';
+	    }
+	if (strpos($_TEXT,'/re')===0){ //un-pause
+	    $id=substr($_TEXT,3,strlen($_TEXT));
+	    mysqli_query($mysql,"update reminder set enabled='1' where id='$id' and ( viber_id='".$_USER['id']."' )");
+	    $_TEXT='/rs';
+		$data='Готово';
 	    }
 
 	if (strpos($_TEXT,'/rs')===0){
-	    $rr2=mysqli_query($mysql,"select * from reminder where  viber_id='".$_USER['id']."' OR user_id='".$_USER['id']."'");
+	    $rr2=mysqli_query($mysql,"select * from reminder where  viber_id='".$_USER['id']."' ");
 	    
 
 		$cnt=mysqli_num_rows($rr2);
@@ -363,32 +368,47 @@ group_name varchar(10), potok_id int, potok_name varchar(10));
 		}
 		$i++;
 	      } //foreach
-	    } //if
-
+	    } //if 
+            else
+			{$data='Нет напоминаний';}
 		if (strpos($_TEXT,'/rs1')===0){
     	        $data.="Введите время оповещения (чч:мм или чч.мм):";
-		mysqli_query($mysql,"update save set last_state='5' where  viber_id='".$_USER['id']."' OR user_id='".$_USER['id']."'");
+		mysqli_query($mysql,"update save set last_state='5' where  viber_id='".$_USER['id']."' ");
 		}
 		if (strpos($_TEXT,'/rs2')===0){
     	        $data.="Введите за сколько минут оповестить перед ПЕРВОЙ парой:";
-		mysqli_query($mysql,"update save set last_state='6' where  viber_id='".$_USER['id']."' OR user_id='".$_USER['id']."'");
+		mysqli_query($mysql,"update save set last_state='6' where  viber_id='".$_USER['id']."' ");
 		}
 	}
 
-	if ($data==''){$data="Выберите действие в меню";}
-	   sendMenu4($_CHAT['id'],$data);
+	if (strpos($_TEXT,'/rasp')===0){ // /rasp
+		$data='Режим расписания. Выберите действие в меню.';
+	    }
+
+	if ($data==''){$data="Выберите действие в меню"; sendHelp($_CHAT['id']);
+	} 
+	else {
+	sendMenu4($_CHAT['id'],$data);}
 	//    exit;
     } else // state=4
 { // other states
-	if ($state<=4){
+	if (($state<=4)&&(strpos($_TEXT,'/')!==false)){
 	   if (!INLINE){
-	   sendInlineMenu2($_CHAT['id'],"".$data,$lines);	} else
-	   {sendMsg($_CHAT['id'],"".$data);}
-	} else{
+	     sendInlineMenu2($_CHAT['id'],"".$data,$lines);	
+	      } else
+	     { sendMenu2($_CHAT['id'],"".$data);
+	      }
+		 exit;
+	  }   else{
+		//if (($data=='')&&(strpos($_TEXT,'/')!==false)) sendHelp($_CHAT['id']);
 		sendMenu2($_CHAT['id'],"".$data);
+		
+		exit;
 	}
 //sendMsg($_CHAT['id'], $data, '' );
+
 }
+//sendHelp($_CHAT['id']);
   } // if user not null
 
 }// main if private chat

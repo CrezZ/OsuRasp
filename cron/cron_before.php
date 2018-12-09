@@ -1,17 +1,22 @@
 <?php
-error_reporting(E_ERROR | E_PARSE);
+$debug=0;
+
+if (!$debug)error_reporting(E_ERROR | E_PARSE);
+
+//define ('MESSENGER',);
 
 require_once '../api.php';
 require_once '../lib.osu.php';
 require_once '../lib.tg.php';
+require_once '../lib.vb.php';
 
-$debug=1;
+//$debug=1;
 
 
 #minimal time before reminder in minutes
 
 $mintime=5;
-if ($debug) $mintime=5555;
+if ($debug) $mintime=55555;
 
 // one per day start
 
@@ -21,7 +26,7 @@ if ((date('H') == 6) && (date('i') < 5) || $debug)
 
 //select todays lessons
 $query="select type,reminder.viber_id,reminder.messenger,timer,save.user_id,who_id,prep_id,facult_id,potok_id,group_id from reminder".
-		" left join save on (reminder.user_id=save.user_id or reminder.viber_id=save.viber_id)".
+		" left join save on ( reminder.viber_id=save.viber_id)".
 		" where enabled=1 and type=2 ";
 $r=mysqli_query($mysql,$query);
 
@@ -34,7 +39,9 @@ if (mysqli_num_rows($r)>0){
 
 //	    $rasp=getOSUData('rasp',$ar['prep_id'],2);
 	    $data="Пары:\n";
-            $dd=strtoupper(date("d-M-y",strtotime('-1 day')));
+            $dd=strtoupper(date("d-M-y",time()));
+if ($debug)   $dd=strtoupper(date("d-M-y",strtotime('+0 day')));
+
 			$rasp = lessonsList($ar['who_id'], $dd,$ar['prep_id'],$ar['group_id'],
 		                   $ar['potok_id'],$ar['facult_id']); //universal
 	
@@ -56,21 +63,28 @@ if (mysqli_num_rows($r)>0){
 }//if date
 
 //select time reminder
-$r=mysqli_query($mysql,"select timer,user_id,message  from cache ".
-	    "where curdate()=dat and ABS(TIME_TO_SEC(TIMEDIFF(curtime(),timer))/60) <= $mintime ");
+if (!$debug) $add="curdate()=dat and";
+$q="select *  from cache ".
+	    "where $add  ABS(TIME_TO_SEC(TIMEDIFF(curtime(),timer))/60) <= $mintime";
+$r=mysqli_query($mysql,$q);
+if ($debug) print $q;
 
 if (mysqli_num_rows($r)>0){
     while($ar=mysqli_fetch_assoc($r)){
 
- if (!$debug && $ar['messenger']=='viber'){
+
+ if ($debug && $ar['messenger']=='viber'){
+	viberSendMenu4($ar['viber_id'],$ar['message']);
 
 }
  if (!$debug && $ar['messenger']=='telegram'){
-	sendMenu4($ar['user_id'],$ar['message']);
+	sendMenu4($ar['viber_id'],$ar['message'],'telegram');
 }
 
-	//sendMenu4($ar['user_id'],$ar['message']);
-	if ($debug)	print export_var($ar)."\n";
+	if ($debug)	print var_export($ar)."\n";
     }
 }
+
+//viberSendMenu4('nWbBvP/AFYl1yD0t66C8xQ==','Hi2');
+
 ?>

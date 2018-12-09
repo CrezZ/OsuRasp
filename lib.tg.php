@@ -37,10 +37,11 @@ function viberMenu($chat,$text,$caption,$keyboard){
                         ->setActionBody($k)
                         ->setText($k2);
             }
+			//error_log(var_export($buttons,true));
         $chat[0]->getClient()->sendMessage(
            (new \Viber\Api\Message\Text())
            ->setSender($chat[1])
-           ->setReceiver($chat[2]->getSender()->getId())
+           ->setReceiver($chat[2])
            ->setText("$text") 
 		   ->setKeyboard(
                     (new \Viber\Api\Keyboard())
@@ -58,7 +59,7 @@ function sendMsg($chat,$text,$caption=''){
         $chat[0]->getClient()->sendMessage(
            (new \Viber\Api\Message\Text())
            ->setSender($chat[1])
-           ->setReceiver($chat[2]->getSender()->getId())
+           ->setReceiver($chat[2])
            ->setText("$text") );
 
 	}
@@ -107,17 +108,17 @@ $help="Это бот для расписания Оренбургского го
     return true;
 }
 
-function sendMenu1($chat,$text){
+function sendMenu1($chat,$text,$messenger=''){
 // menu for select all 
     $keyboard = [	['/w1 Я студент', '/w2 Я преподаватель'],
 		        ['/h Помощь', '/start Сброс']];
 
-	if (MESSENGER=='viber'){
+	if ((MESSENGER=='viber')||($messenger=='viber')){
 		//sendMsg($chat,$help);
 		viberMenu($chat,$text,'',$keyboard);
 	}
 
-	if (MESSENGER=='telegram'){
+	if ((MESSENGER=='telegram')||($messenger=='telegram')){
      //hideMenu($chat);
     sendKeyboard($chat, "$text" , 'Markdown',0 , $keyboard,0);
 	}
@@ -139,18 +140,18 @@ function sendMenu2($chat,$text){
 	}
 }
 
-function sendMenu4($chat,$text){
+function sendMenu4($chat,$text,$messenger=''){
     $keyboard = [
 	['/day Что сегодня','/z Что завтра'],
 			['/rs1 Оповещать утром', '/rs2 Оповещать перед парой'],
 		        ['/h Помощь', '/start Сбросить настройки']];
 
-	if (MESSENGER=='viber'){
+	if ((MESSENGER=='viber')||($messenger=='viber')){
 		//sendMsg($chat,$help);
 		viberMenu($chat,$text,'',$keyboard,0);
 	}
 
-	if (MESSENGER=='telegram'){
+	if ((MESSENGER=='telegram')||($messenger=='telegram')){
     sendKeyboard($chat, "$text" , 'html', 0 , $keyboard,0);
 	}
 }

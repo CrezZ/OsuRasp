@@ -10,6 +10,7 @@ use Viber\Bot;
 use Viber\Api\Sender;
 
 		define('MESSENGER', 'viber');
+		define('INLINE','0');
 
 if(php_sapi_name() == 'cli' OR isset($_GET['webhook']))
         {
@@ -35,10 +36,11 @@ try {
     ->onConversation(function ($event) use ($bot, $botSender) {
         // это событие будет вызвано, как только пользователь перейдет в чат
         // вы можете отправить "привествие", но не можете посылать более сообщений
+			sendHelp([$bot,$botSender,$event]);
+
         return (new \Viber\Api\Message\Text())
             ->setSender($botSender)
             ->setText("Здравствуйте, это бот расписания ОГУ. Как Вас называть?");
-			sendHelp([$bot,$botSender,$event]);
     })
     ->onText('|.*|s', function ($event) use ($bot, $botSender, $mysql) {
         // это событие будет вызвано если пользователь пошлет сообщение 
@@ -55,7 +57,7 @@ try {
 		$_TEXT = mb_strtolower( $event->getMessage()->getText(), 'utf-8'); // для нерегистрозависимости сразу текст в нижнее подчеркивание
 		$_USER['id'] = $event->getSender()->getId(); // информация о юзере-отправителе
 		$_USER['username']=$event->getSender()->getName();
-		$_CHAT['id'] = [$bot,$botSender,$event];
+		$_CHAT['id'] = [$bot,$botSender,$event->getSender()->getId()];
 		//$_USER['username'] = empty($_USER['username']) ? $_USER['first_name'].' '.$_USER['last_name'] : $_USER['username'];
 	//	error_log(var_export($event, true));
 	//	error_log(var_export($_USER['id'].'--', true));

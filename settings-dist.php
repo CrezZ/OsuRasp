@@ -4,17 +4,34 @@
 #$bot_username = 'OsuRasp_bot';
 #$hook_url     = 'https://sip4.hvcloud.ru/t/hook.php';
 
-define('BOT_TOKEN', '123123:123:123ELml4Ap5QqxIas'); // токен бота
+//Telegrm
+
+define('BOT_TOKEN', '747356094:AAEJtIQ7QKLfUEai74AR9ELml4Ap5QqxIas'); // токен бота
 define('API_URL', 'https://api.telegram.org/bot'.BOT_TOKEN.'/'); // адрес API. Без нужды не трогать!
-define('WEBHOOK', 'https://your_domain.ru/process.php'); // адрес вебхука, поменять на свой (строго https!!!)
-define('ADMIN', 'ivanivanov123'); // ник админа, используется проверка "админ ли?"
-define('R', '/var/www/htmlt'); // рутовая директория, т.е. где лежит этот файл, например
+define('WEBHOOK', 'https://sip4.hvcloud.ru/t/process.php'); // адрес вебхука, поменять на свой (строго https!!!)
+define('ADMIN', 'yuriyushakov'); // ник админа, используется проверка "админ ли?"
+define('R', '/var/www/fusionpbx/t'); // рутовая директория, т.е. где лежит этот файл, например
+
+//Viber
+define('VIBER_BOT_TOKEN', '48e22a73aba7d6a8-5c02f4b7fb6a12b4-1d213c12cdced5a3'); // токен бота
+define('VIBER_WEBHOOK', 'https://sip4.hvcloud.ru/t/process_v.php'); // адрес вебхука, поменять на свой (строго https!!!)
+
+//MYsql
+define('MYSQL_HOST','localhost');
+define('MYSQL_USER','root');
+define('MYSQL_PASS','123123');
+define('MYSQL_DB','my_bot');
+
+
 
 # доп. сервисы
 define('SPEECHKIT_TOKEN', '123'); // token Yandex.SpeechKit для распознавания голоса
 define('LASTFM', '1234567890'); // API key Last.FM для просмотра NowPlaying
 
 # настройки подключения к БД
-$mysql=mysqli_connect('localhost','root','123123123') or die("AAAAB".mysqli_connect_error()); // укажите тут данные для коннекта к серверу БД
-mysqli_select_db($mysql,'tg_bot') or die("AAAA".mysqli_error(1)); // укажите имя базы
+
+
+$mysql=mysqli_connect(MYSQL_HOST,MYSQL_USER,MYSQL_PASS) or die("AAAAB".mysqli_connect_error()); // укажите тут данные для коннект
+а к серверу БД
+mysqli_select_db($mysql,MYSQL_DB) or die("DB NOT FOUND".mysqli_error(1)); // укажите имя базы
 mysqli_set_charset($mysql,'utf8'); // по умолчанию все на utf-8

@@ -1,5 +1,6 @@
 {
     "require": {
-        "bogdaan/viber-bot-php": "^0.0.12"
+        "bogdaan/viber-bot-php": "^0.0.12",
+        "whatsapp/chat-api": "v3.2.0.1"
     }
 }
