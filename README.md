@@ -11,7 +11,7 @@ Whatsapp nased on https://github.com/mgp25/Chat-API
 
 
 
-##0 Libraries and DB
+## 0 Libraries and DB
 
 for viber
 1 apt-get install php7.1-gd
@@ -31,9 +31,9 @@ VIBER WILL NOT WORK without this step!
 `mysql -p my_bot <schema.sql
 
 
-#1 Copy settings-dist.php to settings.php
+#  1 Copy settings-dist.php to settings.php
 
-#2.1 Create Telegram bot 
+#   2.1 Create Telegram bot 
 
 1) Search BotFather in telegram
 2) enter /newbot
@@ -41,16 +41,16 @@ VIBER WILL NOT WORK without this step!
 4) enter login_name for bot. ONLY english and it must end with "bot", for example MySuper_bot
 5) Done. Store API token under this line "Use this token to access the HTTP API:"
 
-#2.2 Create Viber bot 
+# 2.2 Create Viber bot 
 
 1) Go to https:// partners.viber.com  → Login there  → Create Bot Account
 2) enter all fields
 3) Done. Store API token and URI
 
-#3 Edit setting.php
+# 3 Edit setting.php
 
 Common 
-define('ADMIN', 'ivanivanov123'); // ник админа, используется проверка "админ ли?"
+define('ADMIN', 'ivanivanov123'); // for admin mode
 define('MYSQL_HOST','localhost');
 define('MYSQL_USER','root');
 define('MYSQL_PASS','123123');
@@ -64,11 +64,11 @@ define('WEBHOOK', 'https://your_domain.ru/process.php'); // адрес вебх�
 
 Viber
 define('VIBER_WEBHOOK', 'https://your_domain.ru/process_v.php'); // адрес вебхука, поменять на свой (строго https!!!)
-define('VIBER_BOT_TOKEN', '123123:123:123ELml4Ap5QqxIas'); // токен бота
+define('VIBER_BOT_TOKEN', '123123:123:123ELml4Apfdwsdf2333'); // токен бота
 
 
 
-#4 Webhook set 
+# 4 Webhook set 
 
 Telegram
  Open browser and Set webhook http://youbotaddress/address/process.php?webhook=1
@@ -76,19 +76,28 @@ Telegram
 Viber
  Open browser and Set webhook http://youbotaddress/address/process_v.php?webhook=1
 
-5. Edit cron
+# 5. Edit cron
 
 start editor 
 
 `crontab -e
 
-and add this lines (Corrected path!):
+and add this lines (Correct path!):
 
 `*/5 * * * * /usr/bin/php /var/www/cron/cron_time.php
 `*/5 * * * * /usr/bin/php /var/www/cron/cron_before.php
 
 
 
-5 Search you bot in Telegram or Viber and press Start
+# 6 Start chat
+
+VIBER inApp link
+viber://pa?chatURI=mysuper_bot
+
+Telegram  inApp link
+enter @mysuper_bot or tg://resolve?domain=mysuper_bot
+
+or use index.html
+
 
  
