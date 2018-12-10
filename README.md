@@ -13,7 +13,12 @@ Whatsapp nased on https://github.com/mgp25/Chat-API
 
 ##0 Libraries and DB
 
+for viber
 1 apt-get install php7.1-gd
+
+for whatsapp
+Requires: PHP Protobuf and Curve25519 to enable end to end encryption
+
 
 0.1 Install composer
 0.2 RUN php composer.phar update or composer update
