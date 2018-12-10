@@ -6,14 +6,14 @@
 
 //Telegrm
 
-define('BOT_TOKEN', '747356094:AAEJtIQ7QKLfUEai74AR9ELml4Ap5QqxIas'); // токен бота
+define('BOT_TOKEN', '74735123123123123'); // токен бота
 define('API_URL', 'https://api.telegram.org/bot'.BOT_TOKEN.'/'); // адрес API. Без нужды не трогать!
 define('WEBHOOK', 'https://sip4.hvcloud.ru/t/process.php'); // адрес вебхука, поменять на свой (строго https!!!)
-define('ADMIN', 'yuriyushakov'); // ник админа, используется проверка "админ ли?"
+define('ADMIN', 'ivanivanov'); // ник админа, используется проверка "админ ли?"
 define('R', '/var/www/fusionpbx/t'); // рутовая директория, т.е. где лежит этот файл, например
 
 //Viber
-define('VIBER_BOT_TOKEN', '48e22a73aba7d6a8-5c02f4b7fb6a12b4-1d213c12cdced5a3'); // токен бота
+define('VIBER_BOT_TOKEN', '123123123'); // токен бота
 define('VIBER_WEBHOOK', 'https://sip4.hvcloud.ru/t/process_v.php'); // адрес вебхука, поменять на свой (строго https!!!)
 
 //MYsql
