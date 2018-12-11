@@ -1,6 +1,10 @@
 <?php
-// exit;
-#error_log("Begin");
+//////////////////////////////////////////////////////////////////
+/////////  This file used for Telegram  Webhook processing and install new webhook (if run from CLI)
+
+
+
+
 require_once 'settings.php';
 require_once 'api.php'; 
 require_once 'lib.osu.php';

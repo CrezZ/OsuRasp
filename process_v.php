@@ -1,4 +1,8 @@
 <?php
+//////////////////////////////////////////////////////////////////
+/////////  This file used for Viber  Webhook processing and install new webhook (if run from CLI)
+
+
 require_once("vendor/autoload.php");
 require_once 'settings.php';
 require_once 'lib.osu.php';

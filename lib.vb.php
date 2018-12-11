@@ -1,4 +1,7 @@
 <?php
+///////////////////////////////////////////////
+//// This is library for viber send
+
 require_once("vendor/autoload.php");
 require_once 'api.php';
 require_once 'lib.osu.php';

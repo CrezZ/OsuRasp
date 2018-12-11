@@ -22,6 +22,16 @@ define('MYSQL_USER','root');
 define('MYSQL_PASS','123123');
 define('MYSQL_DB','my_bot');
 
+//CACHE
+define('CACHE','1'); //set 1 for enable cache
+define ('CACHE_DIR','/tmp'); // Check if www-data writeable for this dir!
+
+//WebPush
+
+define('PUBLIC_KEY','12313123123123123123123'); 
+define('PRIVATE_KEY', 'BeiW19283u12983u19823'); 
+
+
 
 
 # доп. сервисы

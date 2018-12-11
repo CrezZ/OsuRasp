@@ -47,7 +47,7 @@ function editMessage($id_message, $id_chat, $text, $mark = '')
 function sendKeyboard($id_chat, $text, $mark = '', $id_message = '', $keyboard = array(),$max_in_row=0)
 	{
 		sendChatAction($id_chat, 'typing');
-		sleep(1);
+		//sleep(1);
 		$inline=array();
 		$add="";	
 		$i=0;$j=0;
@@ -154,7 +154,7 @@ function deleteKeyboard($id_chat, $id_message)
 function sendImage($id_chat, $path, $local = true, $caption = '', $message_id = '')
 	{
 		sendChatAction($id_chat, 'typing');
-		sleep(1);
+		//sleep(1);
 		
 		if(!$local)
 			{
@@ -194,7 +194,7 @@ function sendImage($id_chat, $path, $local = true, $caption = '', $message_id = 
 function sendFile($id_chat, $path, $local = true, $caption = '', $message_id = '')
 	{
 		sendChatAction($id_chat, 'typing');
-		sleep(1);
+		//sleep(1);
 		
 		if(!$local)
 			{
@@ -262,7 +262,7 @@ function sendVideo($id_chat, $path, $local = true, $caption = '', $message_id = 
 function forwardMessage($id_chat, $from_id, $message_id)
 	{
 		sendChatAction($id_chat, 'typing');
-		sleep(1);
+		//eep(1);
 		
 		$toSend = array('method' => 'forwardMessage', 'chat_id' => $id_chat, 'from_chat_id' => $from_id, 'message_id' => $message_id);
 		

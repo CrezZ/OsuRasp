@@ -100,4 +100,16 @@ enter @mysuper_bot or tg://resolve?domain=mysuper_bot
 or use index.html
 
 
+# Browser Notification
+
+1 Generate key for client-server
+go to  
+https://web-push-codelab.glitch.me/
+
+and copy Public Key and Private Key
+
+2 Edit settings
+
+Open service-worker.js and edit PublicKey and PrivateKey
+
  

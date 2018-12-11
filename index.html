@@ -8,7 +8,28 @@
 </title>
 </head>
 <body>
-
+<h1>
 <a href='tg://resolve?domain=OsuRasp_bot'>InApp Telegram chat</a><p>
-<a href='viber://pa?chatURI=osurasp&text=/start'>InApp Viber chat</a>
+<a href='viber://pa?chatURI=osurasp&text=/start'>InApp Viber chat</a><p>
+</h1>
 
+<!-- //////////////// Flash Notification  -->
+<script src='js/service-worker.js'>
+</script>
+<script src='js/osuru.js'>
+</script>
+
+<div id='whodiv'>
+<select id='who' name='who' onchange="requestData(0,this);";>
+ <option  value=1 >Я студент
+ <option value=2 >Я преподаватель
+ </select>
+</div><br>
+
+<div id='f1'></div><br>
+<div id='f2'></div><br>
+<div id='f3'></div><br>
+<div id='f4'></div><br>
+
+
+<input type=button value="Subscribe in browser" onclick="requestPermission();subscribeUserToPush();">

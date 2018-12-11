@@ -1,7 +1,6 @@
 <?php
-
-///////////////////
-////  Lib for Telegram send menu and ..
+/////////////////////////////////////////////////////////////////////////////
+////  Lib for Telegram and Viber universal send menu and Get lesson list from site 
 
 function array_flatten($array) { 
   if (!is_array($array)) { 

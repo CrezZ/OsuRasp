@@ -16,9 +16,8 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `antiflood`
+-- Table structure for table `cache`
 --
-
 
 DROP TABLE IF EXISTS `cache`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -27,13 +26,15 @@ CREATE TABLE `cache` (
   `user_id` int(11) NOT NULL DEFAULT '0',
   `timer` time DEFAULT NULL,
   `dat` date DEFAULT NULL,
-  `message` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`user_id`)
-) ENGINE=InnoDB DEFAULT 
+  `message` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `viber_id` varchar(50) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `messenger` varchar(10) COLLATE utf8_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`user_id`,`viber_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `crypto_currencies`
+-- Table structure for table `messages`
 --
 
 DROP TABLE IF EXISTS `messages`;
@@ -49,9 +50,8 @@ CREATE TABLE `messages` (
   `chat_name` tinytext,
   `id_message` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1018 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1991 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
 
 --
 -- Table structure for table `reminder`
@@ -66,8 +66,10 @@ CREATE TABLE `reminder` (
   `type` int(11) DEFAULT NULL,
   `timer` time DEFAULT NULL,
   `enabled` int(11) DEFAULT '0',
+  `viber_id` varchar(50) DEFAULT NULL,
+  `messenger` varchar(10) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT 
+) ENGINE=InnoDB AUTO_INCREMENT=51 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -83,20 +85,37 @@ CREATE TABLE `save` (
   `last_state` int(11) DEFAULT NULL,
   `who_id` int(11) DEFAULT NULL,
   `facult_id` int(11) DEFAULT NULL,
-  `facult_name` varchar(10) DEFAULT NULL,
+  `facult_name` varchar(10) COLLATE utf8_unicode_ci DEFAULT NULL,
   `kafedra_id` int(11) DEFAULT NULL,
-  `kafedra_name` varchar(10) DEFAULT NULL,
+  `kafedra_name` varchar(10) COLLATE utf8_unicode_ci DEFAULT NULL,
   `prep_id` int(11) DEFAULT NULL,
-  `prep_name` varchar(20) DEFAULT NULL,
+  `prep_name` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
   `group_id` int(11) DEFAULT NULL,
-  `group_name` varchar(10) DEFAULT NULL,
+  `group_name` varchar(10) COLLATE utf8_unicode_ci DEFAULT NULL,
   `potok_id` int(11) DEFAULT NULL,
-  `potok_name` varchar(10) DEFAULT NULL,
+  `potok_name` varchar(10) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `viber_id` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
+--
+-- Table structure for table `settings`
+--
 
+DROP TABLE IF EXISTS `settings`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `settings` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `status` tinyint(4) DEFAULT '1',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tg_users`
+--
 
 DROP TABLE IF EXISTS `tg_users`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -106,10 +125,9 @@ CREATE TABLE `tg_users` (
   `id_user` int(11) DEFAULT NULL,
   `nick` tinytext,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT 
+) ENGINE=InnoDB AUTO_INCREMENT=45 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
-
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
@@ -119,4 +137,4 @@ CREATE TABLE `tg_users` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-12-07 13:50:03
+-- Dump completed on 2018-12-10 20:07:09
