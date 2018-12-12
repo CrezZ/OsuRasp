@@ -17,12 +17,12 @@ require_once __DIR__.'/../lib.vb.php';
 #minimal time before reminder in minutes
 
 $mintime=5;
-if ($debug) $mintime=55555;
+//if ($debug) $mintime=55555;
 
 // one per day start
 
 
-if ((date('H') == 6) && (date('i') < 5) || $debug) 
+if (((date('H') == 6) && (date('i') < 10)) || $debug) 
 {	 //work only at 06:00
 
 //select todays lessons
@@ -64,9 +64,10 @@ if ($debug)   $dd=strtoupper(date("d-M-y",strtotime('+0 day')));
 }//if date
 
 //select time reminder
+
 if (!$debug) $add="curdate()=dat and";
 $q="select *  from cache ".
-	    "where $add  ABS(TIME_TO_SEC(TIMEDIFF(curtime(),timer))/60) <= $mintime";
+	    "where $add  (TIME_TO_SEC(TIMEDIFF(curtime(),timer))/60) <= $mintime";
 $r=mysqli_query($mysql,$q);
 if ($debug) print $q;
 
@@ -74,7 +75,7 @@ if (mysqli_num_rows($r)>0){
     while($ar=mysqli_fetch_assoc($r)){
 
 
- if ($debug && $ar['messenger']=='viber'){
+ if (!$debug && $ar['messenger']=='viber'){
 	viberSendMenu4($ar['viber_id'],$ar['message']);
 
 }
@@ -82,7 +83,7 @@ if (mysqli_num_rows($r)>0){
 	sendMenu4($ar['viber_id'],$ar['message'],'telegram');
 }
 
-	if ($debug)	print var_export($ar)."\n";
+	if (!$debug)	print var_export($ar)."\n";
     }
 }
 
