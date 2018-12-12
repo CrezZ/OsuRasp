@@ -5,10 +5,11 @@ if (!$debug)error_reporting(E_ERROR | E_PARSE);
 
 //define ('MESSENGER',);
 
-require_once '../api.php';
-require_once '../lib.osu.php';
-require_once '../lib.tg.php';
-require_once '../lib.vb.php';
+require_once __DIR__.'/../api.php';
+require_once __DIR__.'/../api.php';
+require_once __DIR__.'/../lib.osu.php';
+require_once __DIR__.'/../lib.tg.php';
+require_once __DIR__.'/../lib.vb.php';
 
 //$debug=1;
 
