@@ -7,6 +7,7 @@ require_once("vendor/autoload.php");
 require_once 'settings.php';
 require_once 'lib.osu.php';
 require_once 'lib.tg.php';
+require_once 'api.php';
 
 
 use Viber\Client;

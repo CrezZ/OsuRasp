@@ -51,10 +51,10 @@ error_log(MESSENGER."-$_TEXT\n");
 		mysqli_query($mysql,"delete from cache where user_id='$num' and viber_id='".$_USER['id']."' ");
 		//set minimal user_id as main user (zero);
 		mysqli_query($mysql," update save as t1 inner join (select min(user_id) as minid from save where viber_id='".
-		$_USER['id']."') as t2  set user_id=0  where t1.user_id=t2.minid and viber_id='".
+		$_USER['id']."') as t2  set user_id=0,last_user_id=0  where t1.user_id=t2.minid and viber_id='".
 		$_USER['id']."' ");
+		// set last_user-id=0;
 		
-	
 		sendMsg($_CHAT['id'],"Удален $num");
 		//sendMsg($_CHAT['id'],"Переключен на основного пользователя");
 		  }
@@ -114,11 +114,15 @@ error_log(MESSENGER."-$_TEXT\n");
 	}
 
 
-  if ($ar['last_state']==10){  // send feedback
+  if ($ar['last_state']==10){  // send feedback after /fb
+	mysqli_query($mysql,"update save set last_state='4' where  last_user_id=user_id and viber_id='".$_USER['id']."' ");
 	sendMsg($_CHAT['id'],'Ваш отзыв был отправлен ');
+	sendHelp($_CHAT['id']);
 	//send msg to admin
 	sendMsg(ADMIN_ID,'Отзыв от @'.$_USER['username']."\n $_TEXT",'',ADMIN_MESSENGER);
-	mysqli_query($mysql,"update save set last_state='4' where  last_user_id=user_id and viber_id='".$_USER['id']."' ");
+	
+	//error_log(ADMIN_ID.'Отзыв от @'.$_USER['username']."\n $_TEXT".''.ADMIN_MESSENGER);
+	
 	//exit;
 	$ar['last_state']=4;
 	$_TEXT="/rasp";
@@ -195,7 +199,9 @@ error_log(MESSENGER."-$_TEXT\n");
 	  $cntr=mysqli_query($mysql,"select max(id) from save where  viber_id='".$_USER['id']."'");
 		$cnt=mysqli_fetch_array($cntr);
 		$cnt[0]++;
-	 }   
+	 }   else
+	 {$cnt[0]=0;}
+	 
 	 mysqli_query($mysql,"insert into save (last_state,who_id,user_id,viber_id, last_user_id) values ('1','$num','".($cnt[0])."','".$_USER['id']."','".$cnt[0]."')");
 		mysqli_query($mysql,"update save set last_user_id='".$cnt[0]."' where viber_id='".$_USER['id']."' ");	
     //re-query new data array
@@ -569,7 +575,7 @@ error_log(MESSENGER."-$_TEXT\n");
 		$data='Режим расписания. Выберите действие в меню.';
 	    }
 
-	if ($data==''){$data="Выберите действие в меню"; sendMsg($_CHAT['id'],$data);
+	if ($data==''){$data="Выберите действие в меню"; sendMenu4($_CHAT['id'],$data);
 	} 
 	else {
 //		sendMsg($_CHAT['id'],var_export($lines,true));
