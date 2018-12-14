@@ -100,7 +100,7 @@ function sendInlineKeyboard($id_chat, $text, $mark = '', $id_message = '', $keyb
 			
 		  if (count($k1)>1){
 		 foreach ($k1 as $k2){
-			 $k2n=substr($k2,strpos($k2,'-')+1,strlen($k2));
+			 $k2n=substr($k2,strcspn($k2,'- ')+1,strlen($k2));
 			 $inline[$j][]=['text'=> "$k2n", 'callback_data' => "$k2" ];
 			 $i++;
 		 if ($i%$max_in_row==0) $j++;

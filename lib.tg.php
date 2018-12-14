@@ -2,6 +2,8 @@
 /////////////////////////////////////////////////////////////////////////////
 ////  Lib for Telegram and Viber universal send menu and Get lesson list from site 
 
+$BASE_KEYBOARD =  ['/h Домой', '/start Сброс'];
+
 function array_flatten($array) { 
   if (!is_array($array)) { 
     return FALSE; 
@@ -50,11 +52,11 @@ function viberMenu($chat,$text,$caption,$keyboard){
 	
 }
 
-function sendMsg($chat,$text,$caption=''){
-	if (MESSENGER=='telegram'){
-	  sendMessage($chat,$text,$caption);
+function sendMsg($chat,$text,$caption='',$messenger=''){
+	if (MESSENGER=='telegram' || $messenger=='telegram'){
+	  sendMessage($chat,$text,'html');
 	}
-	if (MESSENGER=='viber'){
+	if (MESSENGER=='viber' || $messenger=='viber'){
         $chat[0]->getClient()->sendMessage(
            (new \Viber\Api\Message\Text())
            ->setSender($chat[1])
@@ -72,45 +74,11 @@ function hideMenu($chat){
 
 }
 
-function sendHelp($chat){
-//global help
-$tg_add="";
-$viber_add="VIBER";
-$add="";
-if (MESSENGER=='viber') $add=$viber_add;
-
-$help="Это бот для расписания Оренбургского госдарственного университета.".
-	"Сначала нужно выбрать студент Вы /w1 или преподаватель /w2, затем следовать подсказкам.\n".
-	"/start - очистить все настройки и начать заново. Если что то не работает, рекомендуется начать с этого места.\n".
-	"/noreminder - удалить все напоминания\n".
-	"/rs - управление напоминаниями о парах\n".
-	"/rasp - работа с распиcанием через меню (если доступно))\n".
-	"/day - пары сеодня (если доступно))\n".
-	"/z - пары завтра (если доступно))\n".
-	"/show - показать настройки" ;
-    $keyboard = [	
-					['/w1 Я студент', '/w2 Я преподаватель'],
-					['/noreminder Не напоминать','/rs Напоминания'],
-					['/rasp Основной режим','/show Посмотреть настройки'],
-					['/day Пары сегодня','/z Пары завтра'],
-			        ['/h Помощь', '/start Сброс']];
-
-	if (MESSENGER=='viber'){
-		//sendMsg($chat,$help);
-		viberMenu($chat,$help,'',$keyboard);
-	}
-	if (MESSENGER=='telegram'){
-	 hideMenu($chat);
-	 //$keyb2=explode("\n",$keyboard);
-     sendKeyboard($chat, $help, 'html',0 , $keyboard,0);
-    }
-    return true;
-}
-
-function sendMenu1($chat,$text,$messenger=''){
+function sendMenu0($chat,$text,$messenger='',$menu=[]){
 // menu for select all 
-    $keyboard = [	['/w1 Я студент', '/w2 Я преподаватель'],
-		        ['/h Помощь', '/start Сброс']];
+    $keyboard = array();
+	
+	if (count($menu)>0) $keyboard=$menu;
 
 	if ((MESSENGER=='viber')||($messenger=='viber')){
 		//sendMsg($chat,$help);
@@ -119,43 +87,90 @@ function sendMenu1($chat,$text,$messenger=''){
 
 	if ((MESSENGER=='telegram')||($messenger=='telegram')){
      //hideMenu($chat);
-    sendKeyboard($chat, "$text" , 'Markdown',0 , $keyboard,0);
+    sendKeyboard($chat, "$text" , 'html',0 , $keyboard,0);
 	}
 }
 
-function sendMenu2($chat,$text){
+function sendHelp($chat){
+//global help
+global $BASE_KEYBOARD;
+$tg_add="";
+$viber_add="VIBER";
+$add="";
+if (MESSENGER=='viber') $add=$viber_add;
+
+$text="Это бот для расписания Оренбургского госдарственного университета.".
+	"Сначала нужно выбрать студент Вы /w1 или преподаватель /w2, затем следовать подсказкам.\n".
+	"Вы можете добавить несколько отслеживаемых расписаний и студента и преподавателя. Управлять этим можно в меню 'Мои пользователи'\n".
+	"Замечания и предложения можно высказать через кнопку 'Обратная связь'";
+	
+/*	"/start - очистить все настройки и начать заново. Если что то не работает, рекомендуется начать с этого места.\n".
+	"/noreminder - удалить все напоминания\n".
+	"/rs - управление напоминаниями о парах\n".
+	"/rasp - работа с распиcанием через меню (если доступно))\n".
+	"/day - пары сеодня (если доступно))\n".
+	"/z - пары завтра (если доступно))\n".
+	"/show - показать настройки" ;*/
+    $keyboard = [	
+				//	['/w1 Я студент', '/w2 Я преподаватель'],
+					['/w Мои пользователи','/show Посмотреть настройки'],
+					['/day Пары сегодня','/z Пары завтра'],
+					['/rasp Расписание','/fb Обратная связь'],
+					['/norem Не напоминать','/rs Подписки'],
+					];
+//			        ['/h Помощь', '/start Сброс']];
+	$keyboard[]=$BASE_KEYBOARD;
+
+	sendMenu0($chat,$text,'',$keyboard);
+}
+
+
+
+
+function sendMenu1($chat,$text,$messenger=''){
+// menu for select all 
+    $keyboard = [	['/w1 Я студент', '/w2 Я преподаватель']];
+//		        ['/h Помощь', '/start Сброс']];
+global $BASE_KEYBOARD;
+$keyboard[]=$BASE_KEYBOARD;
+	sendMenu0($chat,$text,$messenger,$keyboard);
+}
+
+function sendMenu2($chat,$text,$messenger='',$menu=[]){
 // menu for sceduler
-    $keyboard =[
-	        ['/h Помощь', '/start Сброс']];
+//    $keyboard =[
+//	        ['/h Помощь', '/start Сброс']];
 
-	if (MESSENGER=='viber'){
-		//sendMsg($chat,$help);
-		viberMenu($chat,$text,'',$keyboard);
-	}
+global $BASE_KEYBOARD;
+$keyboard=$menu;
+$keyboard[]=$BASE_KEYBOARD;
 
- 	if (MESSENGER=='telegram'){
-//   hideMenu($chat);
-    sendKeyboard($chat, "$text" , 'Markdown',0 , $keyboard,0);
-	}
+	sendMenu0($chat,$text,$messenger,$keyboard);
+	
+	
 }
 
-function sendMenu4($chat,$text,$messenger=''){
+function sendMenu4($chat,$text,$messenger='',$menu=[]){
     $keyboard = [
 	['/day Что сегодня','/z Что завтра'],
-			['/rs1 Оповещать утром', '/rs2 Оповещать перед парой'],
-		        ['/h Помощь', '/start Сбросить настройки']];
-
-	if ((MESSENGER=='viber')||($messenger=='viber')){
-		//sendMsg($chat,$help);
-		viberMenu($chat,$text,'',$keyboard,0);
+			['/rs1 Оповещать утром', '/rs2 Оповещать перед парой']];
+	//$keyboard[] = $menu;
+	foreach($menu as $m){
+		
+	array_push($keyboard,$m);
 	}
+//	sendMsg($chat,var_export($keyboard,true));
+//		        ['/h Помощь', '/start Сбросить настройки']];
 
-	if ((MESSENGER=='telegram')||($messenger=='telegram')){
-    sendKeyboard($chat, "$text" , 'html', 0 , $keyboard,0);
-	}
+global $BASE_KEYBOARD;
+$keyboard[]=$BASE_KEYBOARD;
+	//sendMsg($chat,var_export($keyboard,true));
+
+	sendMenu0($chat,$text,$messenger,$keyboard);
+	
 }
 function sendInlineMenu2($chat,$text,$array){
-    $keyboard = [[],['/h Помощь', '/start Сброс']];
+//    $keyboard = [[],['/h Помощь', '/start Сброс']];
    foreach($array as $a){
     $keyboard[0][]=$a;
    }

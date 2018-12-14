@@ -8,8 +8,12 @@
 
 define('BOT_TOKEN', '74735123123123123'); // токен бота
 define('API_URL', 'https://api.telegram.org/bot'.BOT_TOKEN.'/'); // адрес API. Без нужды не трогать!
-define('WEBHOOK', 'https://sip4.hvcloud.ru/t/process.php'); // адрес вебхука, поменять на свой (строго https!!!)
+define('WEBHOOK', 'https://mysite.ru/process.php'); // адрес вебхука, поменять на свой (строго https!!!)
 define('ADMIN', 'ivanivanov'); // ник админа, используется проверка "админ ли?"
+define('ADMIN_ID', '112312330792'); // chat_id admin,
+define('ADMIN_MESSENGER', 'telegram'); //  admin messenger [telegram, viber, push ...],
+
+
 define('R', '/var/www/fusionpbx/t'); // рутовая директория, т.е. где лежит этот файл, например
 
 //Viber

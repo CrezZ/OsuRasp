@@ -57,6 +57,7 @@ else
 				mysqli_query($mysql,"INSERT INTO `tg_users`(`id_user`, `nick`) VALUES ('".$_USER['id']."', '".$_USER['username']."')");
 			}
 		
+		require_once 'scripts/menu2.php';
 /*		// if not private
 		if($_USER['id'] != $_CHAT['id'])
 			{
@@ -84,6 +85,7 @@ else
 //		$qt = mysqli_query($mysql,"SELECT * FROM `blacklist_chats` WHERE `id_chat` = ".$_CHAT['id']);
 //		if(mysqli_num_rows($qt) == 0 OR $_USER['username'] == ADMIN)
 //			{
+	/*
 				$h = opendir('scripts');
 				while(false !== ($file = readdir($h)))
 					{
@@ -95,5 +97,7 @@ else
 							}
 					}
 				closedir($h);
+	*/
 //			}
 	}
+?>
