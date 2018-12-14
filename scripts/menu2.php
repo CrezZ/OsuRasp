@@ -219,8 +219,8 @@ error_log(MESSENGER."-$_TEXT\n");
 				 $who=($ar['who_id']==1)?"Студент":"Преподаватель";
 				 $gr_id=($ar['who_id']==1)?$ar['group_id']:
 									 $ar['prep_id'];
-				 $gr_name=($ar['who_id']==1)?$ar['group_name']:
-									 $ar['prep_name'];
+				 $gr_name=trim(($ar['who_id']==1)?$ar['group_name']:
+									 $ar['prep_name']);
 				 $gr_name=(empty($gr_name))?'(не настроен)':$gr_name;
 				 $array[]=[ "/dl".$ar['user_id']." - Удалить $i ".$gr_name,
 							 "/ch".$ar['user_id']."s".$ar['who_id']." - Поменять $i ".$gr_name]
@@ -229,6 +229,7 @@ error_log(MESSENGER."-$_TEXT\n");
 				$i++;
 			 }	while ($ar=mysqli_fetch_assoc($firstr)); 
 		}
+		global $BASE_KEYBOARD;
 		$array[]=$BASE_KEYBOARD; // help and reset
 		sendMenu0($_CHAT['id'],$data,'',$array);
 		$ar['last_state']=1;
@@ -324,13 +325,13 @@ error_log(MESSENGER."-$_TEXT\n");
 				 $who=($ar['who_id']==1)?"Студент":"Преподаватель";
 				 $gr_id=($ar['who_id']==1)?$ar['group_id']:
 									 $ar['prep_id'];
-				 $gr_name=($ar['who_id']==1)?$ar['group_name']:
-									 $ar['prep_name'];
-				 $kf_name=($ar['who_id']==1)?$ar['potok_name']:
-									 $ar['kafedra_name'];
+				 $gr_name=trim(($ar['who_id']==1)?$ar['group_name']:
+									 $ar['prep_name']);
+				 $kf_name=trim(($ar['who_id']==1)?$ar['potok_name']:
+									 $ar['kafedra_name']);
 				 
 				$data.="$i. $who $gr_name \n"; 
-				$data.=mb_strtoupper(" - ".$ar['facult_name'].", ".$kf_name.", ".$gr_name);
+				$data.=mb_strtoupper(" - ".trim($ar['facult_name']).", ".$kf_name.", ".$gr_name);
 				$data.="\n";
 				$i++;
 			 }	while ($ar=mysqli_fetch_assoc($firstr)); 
@@ -475,14 +476,14 @@ error_log(MESSENGER."-$_TEXT\n");
     if (($state>=4)) // select reminder
     {
 	if (((strpos($_TEXT,'/day')===0)||(strpos($_TEXT,'/z')===0))){
-		sendChatAction($_CHAT['id'], 'typing');
+		if (MESSENGER=='telegram')sendChatAction($_CHAT['id'], 'typing');
 	// if today or tomorrow
 	$ar=$firstar;
 	do {
 		
 	$title=($ar['who_id']==1)?'студент':'преподаватель';
-		$gr_name=($ar['who_id']==1)? $ar['group_name']:
-									 $ar['prep_name'];
+		$gr_name=trim(($ar['who_id']==1)? $ar['group_name']:
+									 $ar['prep_name']);
 	    $data0="Пары для $title $gr_name:\n";
 	    $dat= (strpos($_TEXT,'/z')===0)? strtotime("+1 day") : time();
 	    $dd=strtoupper(date("d-M-y",$dat));
@@ -571,7 +572,7 @@ error_log(MESSENGER."-$_TEXT\n");
 	if ($data==''){$data="Выберите действие в меню"; sendMsg($_CHAT['id'],$data);
 	} 
 	else {
-		sendMsg($_CHAT['id'],var_export($lines,true));
+//		sendMsg($_CHAT['id'],var_export($lines,true));
 	sendMenu4($_CHAT['id'],$data,'',$lines);}
 	//    exit;
     } else // state=4

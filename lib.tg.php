@@ -35,7 +35,7 @@ function viberMenu($chat,$text,$caption,$keyboard){
 //						->setSilent(true)
 						
 						->setActionType('reply')
-                        ->setActionBody($k)
+                        ->setActionBody("$k ")
                         ->setText($k2);
             }
 			//error_log(var_export($buttons,true));
@@ -159,6 +159,7 @@ function sendMenu4($chat,$text,$messenger='',$menu=[]){
 		
 	array_push($keyboard,$m);
 	}
+
 //	sendMsg($chat,var_export($keyboard,true));
 //		        ['/h Помощь', '/start Сбросить настройки']];
 
@@ -176,7 +177,9 @@ function sendInlineMenu2($chat,$text,$array){
    }
     //error_log(var_export($keyboard, true));
     //error_log(var_export($array, true));
-	
+	global $BASE_KEYBOARD;
+
+$keyboard[]=$BASE_KEYBOARD;
    //$text.="DEBUG\n".export_var($keyboard,true);
 	if (MESSENGER=='viber'){
 		//sendMsg($chat,$help);
