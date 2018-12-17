@@ -67,9 +67,9 @@ if ($debug)   $dd=strtoupper(date("d-M-y",strtotime('+0 day')));
 
 if (!$debug) $add="curdate()=dat and";
 $q="select *  from cache ".
-	    "where $add  (TIME_TO_SEC(TIMEDIFF(curtime(),timer))/60) <= $mintime";
+	    "where $add  ((TIME_TO_SEC(TIMEDIFF(curtime(),timer))/60) between 0 and '$mintime')";
 $r=mysqli_query($mysql,$q);
-if ($debug) print $q;
+if (!$debug) print $q;
 
 if (mysqli_num_rows($r)>0){
     while($ar=mysqli_fetch_assoc($r)){

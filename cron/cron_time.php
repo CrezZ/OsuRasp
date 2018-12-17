@@ -21,7 +21,7 @@ if (!$debug) $add_query="and curtime()<timer";
 //select time reminder
 $query="select type,reminder.messenger,save.viber_id,timer,save.user_id,who_id,prep_id,facult_id,potok_id,group_id from reminder ".
 		" left join save on (reminder.viber_id=save.viber_id)".
-	    "where enabled=1 and type=1 and (TIME_TO_SEC(TIMEDIFF(curtime(),timer))/60) <= $mintime $add_query";
+	    "where enabled=1 and type=1 and ((TIME_TO_SEC(TIMEDIFF(curtime(),timer))/60) between 0 and $mintime) $add_query";
 $r=mysqli_query($mysql,$query);
 if ($debug) print "\n $query \n count - ".mysqli_num_rows($r)."\n";
 
